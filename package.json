@@ -1,0 +1,15 @@
+{
+  "name": "chat",
+  "subdomain": "dvapoy-nyasha-chat.dvapoy-nyasha",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "version": "0.1.2",
+   "engines": {
+      "node": "0.8.x"
+   },
+   "dependencies": {
+      "socket.io": "*",
+      "express": "3.0.x"
+   }
+}

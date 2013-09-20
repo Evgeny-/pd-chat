@@ -1,0 +1,99 @@
+html, body {
+    height: 100%;
+    min-height: 100%;
+    max-height: 100%;
+}
+
+body {
+    background:#fff;
+    margin: 0;
+    font-family: arial, sans-serif;
+    font-size: 13px;
+}
+
+#dvapoy_chat {
+    bottom:0;
+    right:0;
+    top: 0;
+    left: 0;
+    padding: 5px;
+}
+#dvapoy_chat a {
+    color: #105799;
+    cursor: pointer;
+}
+
+#dvapoy_log {
+    overflow-y:auto;
+    overflow-x:hidden;
+    text-align:left;
+    color:#111;
+    top:25px;
+    bottom: 50px;
+    right: 10px;
+    left: 10px;
+    margin:8px 0;
+    position:absolute;
+    height:auto;
+}
+#dvapoy_log .msg {
+    border-bottom: 1px dotted #ccc;
+    padding: 3px;
+}
+#dvapoy_log .msg .name {
+    font-weight: bold;
+    cursor:pointer;
+}
+#dvapoy_log .msg img {
+    max-width: 200px;
+    max-height:100px
+}
+#dvapoy_log .msg .time {
+    color: #819193;
+    font-size: 12px;
+}
+#dvapoy_input {
+    width: 98%;
+    background: #eee;
+    border: 1px solid #aaa;
+    border-radius: 0;
+    color: #424852;
+    position: absolute;
+    bottom: 5px;
+    height: 40px
+}
+#dvapoy_options {
+    text-align: right;
+}
+#dvapoy_options a:before {
+    content: "|"; color: #bbb;
+    display: inline-block;
+    margin: 0 5px;
+}
+#dvapoy_options label {
+    cursor: pointer;
+}
+
+#dvapoy_options label input {
+    position: relative;
+    top: 3px;
+}
+.theme #dvapoy_chat, .theme {
+    background: #19191B;
+    color: #eee
+}
+.theme #dvapoy_chat a {
+    color: #5798D5
+}
+.theme #dvapoy_chat #dvapoy_input {
+    color: #eee;
+    background: #3E3E3E;
+    border-color: #636363
+}
+.theme #dvapoy_chat .msg {
+    border-color: #4F4F4F
+}
+.theme #dvapoy_chat #dvapoy_log {
+    color: #eee
+}
+
