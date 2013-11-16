@@ -121,7 +121,7 @@
         socket = io.connect('', {'transports': [isSocket() ? 'websocket' : 'xhr-polling']});
 
         socket.on('connect', function () {
-            if(location.hash && location.hash.slice(1) > 5) {
+            if(location.hash && location.hash.slice(1).length > 5) {
                 send({type: 'session', id: location.hash.slice(1) });
             }
             else {

@@ -18,10 +18,13 @@ var users = {},
 var HELPS = [
    '<br><b>/users</b> - список всех пользователей чата',
    '<b>/smiles</b> - список доступных смайлов',
-   '<b>/pm userName text</b> - личные сообщения'
+   '<b>/pm userName text</b> - личные сообщения',
+   '<b>/color #123ABC</b> - цвет ника'
 ];
 
 var READY = false;
+
+var SECRET_WORD = "СЕКРЕТНОЕ_СЛОВО";
 
 setTimeout(function () {READY = true}, 1000 * 60);
 
@@ -121,6 +124,22 @@ function getUserIDs (user) {
    return ids;
 }
 
+function getUserObg (user) {
+   for(var k in users) {
+      if(users[k].name.toLowerCase() === user.toLowerCase()) return users[k];
+   }
+   return null;
+}
+
+function hexToRgb (hex) {
+   var res = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+   return (res && [1, 2, 3].filter(function (n) {
+      res[n] = parseInt(res[n], 16);
+      return res[n] > 40 && res[n] < 180;
+   })) ? 'rgb('+res[1]+','+res[2]+','+res[3]+')' : false;
+}
+
+
 io.sockets.on('connection', function (socket) {
    var ID = socket.id, time, name, color;
 
@@ -194,21 +213,21 @@ io.sockets.on('connection', function (socket) {
 
 
       if(msg.type === 'nickname' && msg.user && ! (ID in users)) {
-         var nick = msg.user.trim();
+         var nick = msg.user.trim(), obj = getUserObg(nick);
 
-         //if( ! hasUser(nick) && READY) bySystem('Вошел пользователь <b>' + nick + '</b>');
+         if( ! hasUser(nick) && READY) bySystem('Вошел пользователь <b>' + nick + '</b>');
 
-         users[ID] = {name : nick, color : getRandomColor()};
+         users[ID] = {name : nick, color : obj ? obj.color : getRandomColor()};
 
          sendMeBySystem('Список команд -  <b>/help</b>');
-         //sendMeBySystem('Донат на сервер и просто так: вм R348060284937 и тел. +79600916519');
+         sendMeBySystem('Донат на сервер - 270р/мес: вм R348060284937 и тел. +79600916519');
          sendMeBySystem('socketid:'+ID);
 
          history.slice(-8).forEach(function (msg) {
             socket.json.send(msg);
          });
 
-         if(history.length > 2000) {
+         if(history.length > 100) {
             history = [];
          }
       }
@@ -219,8 +238,8 @@ io.sockets.on('connection', function (socket) {
          }
 
          sendMeBySystem('Список команд -  <b>/help</b>');
-         //sendMeBySystem('Донат на сервер и просто так: вм R348060284937 и тел. +79600916519');
-         //sendMeBySystem('socketid:'+ID);
+         sendMeBySystem('Донат на сервер - 270р/мес: вм R348060284937 и тел. +79600916519');
+         sendMeBySystem('socketid:'+ID);
 
          history.slice(-8).forEach(function (msg) {
             socket.json.send(msg);
@@ -246,8 +265,7 @@ io.sockets.on('connection', function (socket) {
          }
 
          else {
-            if(name === 'JUSE') return;
-
+            name = users[ID].name;
             var command = msg.text.split(' ');
 
             switch(command[0]) {
@@ -267,7 +285,7 @@ io.sockets.on('connection', function (socket) {
                }
 
                case "/ban" : {
-                  if(command[2] === "СЕКРЕТНОЕ_СЛОВО") {
+                  if(name === "Двапой" || command[2] === SECRET_WORD) {
                      bySystem('Был забанен пользователь ' + command[1]);
                      if( ! isBanned(command[1])) {
                         banned.push(command[1]);
@@ -281,7 +299,7 @@ io.sockets.on('connection', function (socket) {
                }
 
                case "/unban" : {
-                  if(command[2] === "СЕКРЕТНОЕ_СЛОВО") {
+                  if(name === "Двапой" || command[2] === SECRET_WORD) {
                      if(isBanned(command[1])) {
                         banned[banned.indexOf(command[1])] = null;
                         bySystem('Был разбанен пользователь ' + command[1]);
@@ -295,7 +313,7 @@ io.sockets.on('connection', function (socket) {
                }
 
                case "/system" : {
-                  if(command[1] === "СЕКРЕТНОЕ_СЛОВО") {
+                  if(name === "Двапой" || command[1] === SECRET_WORD) {
                      command[0] = command[1] = "";
                      bySystem(command.join(' '))
                   }
@@ -311,8 +329,20 @@ io.sockets.on('connection', function (socket) {
                   break;
                }
 
+               case "/color" : {
+                  var rgb = hexToRgb(command[1]);
+                  if(rgb) {
+                     users[ID].color = rgb;
+                     sendMeBySystem('Вы изменили цвет на <i style="color:'+rgb+'">'+command[1]+'</i>');
+                  }
+                  else {
+                     sendMeBySystem('Нельзя выбирать слишком яркие или свлишком темные цвета');
+                  }
+                  break;
+               }
+
                case "/login" : {
-                  if(command[2] === "СЕКРЕТНОЕ_СЛОВО") {
+                  if(name === "Двапой" || command[2] === SECRET_WORD) {
                      users[ID] = {name : command[1], color : getRandomColor()};
                   }
                   else {
@@ -327,6 +357,10 @@ io.sockets.on('connection', function (socket) {
                   command[0] = command[1] = "";
                   sendPm(n, command.join(''));
                   break;
+               }
+
+               default : {
+                  sendMeBySystem("Команда не найдена");
                }
 
             }

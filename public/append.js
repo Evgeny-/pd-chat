@@ -32,8 +32,8 @@
    }
 
    function clearCounter() {
-      titleEl.innerHTML = title;
-      counter = 0;
+       counter = 0;
+       titleEl.innerHTML = title;
    }
 
    function getSize() {
@@ -50,7 +50,7 @@
 
    var insert = document.getElementById('footer_utilities'),
        script = document.createElement('script'),
-       DOMAIN = 'http://dvapoy-nyasha-chat.dvapoy-nyasha.nodejitsu.com/';
+       DOMAIN = 'http://localhost:8080/';
 
    script.src = DOMAIN + 'socket.io/socket.io.js';
 

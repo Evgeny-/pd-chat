@@ -8,9 +8,9 @@
 // @run-at         document-end
 // ==/UserScript==
 (function () {
-   if(window._appended) return;
+   if(_appended) return;
    var script = document.createElement('script');
-   script.src = 'http://dvapoy-nyasha-chat.dvapoy-nyasha.nodejitsu.com/append.js'; 
+   script.src = 'http://http://localhost:8080/append.js';
    document.body.appendChild(script);  
    window._appended = true;
 }());
